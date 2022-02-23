@@ -1,8 +1,11 @@
 <html>
-    <head>
-        <title>Register - @yield('title')</title>
-    </head>
     <body> 
+    <head>
+        <title>App Name - @yield('title')</title>
+        <script src="{{ asset('js/app.js') }}" defer></script>
+    <!-- Styles -->
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    </head>
         <div class="container">
             @yield('content')
             <form method="POST" action="/register">
@@ -18,7 +21,7 @@
               @enderror
 
               <label for="email">Email</label>
-              <input id="email" name="email" type="text" required
+              <input id="email" name="email" type="email" required
               class="@error('email')
                 is-invalid
               @enderror">

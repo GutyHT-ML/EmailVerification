@@ -1,14 +1,17 @@
 <html>
+    <body> 
     <head>
         <title>App Name - @yield('title')</title>
+        <script src="{{ asset('js/app.js') }}" defer></script>
+    <!-- Styles -->
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     </head>
-    <body> 
         <div class="container">
             @yield('content')
             <form method="POST" action="/request-code">
               @csrf
               <label for="email">Email</label>
-              <input id="email" name="email" type="text" required
+              <input id="email" name="email" type="email" required
               class="@error('email')
                 is-invalid
               @enderror">
