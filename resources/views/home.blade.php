@@ -2,15 +2,11 @@
     <body> 
     <head>
         <title>App Name - @yield('title')</title>
-        <script src="{{ asset('js/app.js') }}" defer></script>
-        <!-- Styles -->
-        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     </head>
         <div class="container">
             @yield('content')
-            <h1>
-              Bienvenido {{ $name }}
-            </h1>
+            <h2>Hola!</h2>
+            <h2>Bienvenido {{ $name }}</h2>
         </div>
     </body>
 </html>
