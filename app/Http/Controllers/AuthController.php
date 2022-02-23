@@ -26,7 +26,7 @@ class AuthController extends Controller
     }
 
     public function verifyEmail(Request $request) {
-      $user = User::firstWhere('email', $request->input('email'))->first();
+      $user = User::where('email', $request->input('email'))->first();
       if($user) {
         $user->email_verified_at = Carbon::now();
         $user->save();
