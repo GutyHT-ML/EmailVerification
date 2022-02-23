@@ -8,9 +8,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class EmailVerification extends Mailable
+class CodeVerification extends Mailable
 {
     use Queueable, SerializesModels;
+
 
     public $user;
     /**
@@ -30,9 +31,8 @@ class EmailVerification extends Mailable
      */
     public function build()
     {
-      return $this->view('mails/verification')
-                  ->with([
-                    'user' => $this->user
-                  ]);
+        return $this->view('mails/code', [
+          'user' => $this->user
+        ]);
     }
 }

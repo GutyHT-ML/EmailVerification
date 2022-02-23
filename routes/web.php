@@ -22,10 +22,16 @@ Route::get('/', function () {
 //   return view('login');
 // });
 
-Route::post('/login', 'AuthController@login');
+Route::get('/verify-email', 'AuthController@verifyEmail');
+
+Route::post('/request-code', 'AuthController@requestCode');
+
+Route::post('login', 'AuthController@login');
 
 Route::get('/register', function() {
   return view('register');
 });
 
 Route::post('/register', 'AuthController@register');
+
+Route::post('/signup', 'AuthController@register');

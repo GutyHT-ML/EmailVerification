@@ -2,90 +2,71 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\CodeVerification;
 use App\Mail\EmailVerification;
+use App\User;
+use Carbon\Carbon;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-      return view('codeverification', ['email' => $request->email]);
-    }
-
     public function register(Request $request)
     {
-      print($request->input('email'));
-      Mail::to($request->input('email'))->send(new EmailVerification('sexo'));
+      $user = User::create($request->all());
+      Mail::to($user)->send(new EmailVerification($user));
+      print('Debe verificar su email antes de iniciar sesión');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+    public function verifyEmail(Request $request) {
+      $user = User::firstWhere('email', $request->input('email'))->first();
+      if($user) {
+        $user->email_verified_at = Carbon::now();
+        $user->save();
+        print('Email verificado correctamente');
+      }else {
+        print('Usuario no encontrado');
+      }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function login(Request $request)
     {
-
+      $user = User::firstWhere('email', $request->input('email'))->first();
+      if($user) {
+        if ($user->email_verified_at != null) {
+          if($user->verification_code == $request->input('code')) {
+            print('Logged in');
+            return view('home', [
+              'name' => $user->name
+            ]);
+          } else {
+            print('código erroneo');
+          }  
+        } else {
+          print('Correo no verificado');
+        }
+      } else {
+        print('Usuario no encontrado');
+      }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function requestCode(Request $request) 
     {
-        //
+      $user = User::firstWhere('email', $request->input('email'))->first();
+      if($user != null) {
+        if($user->password == $request->input('password')) {
+          $user->verification_code = chr(rand(65,90)) . chr(rand(65,90)) . chr(rand(65,90)) . chr(rand(65,90)) . chr(rand(65,90));
+          $user->save();
+          Mail::to($user)->send(new CodeVerification($user));
+          return view('codeverification', [
+            'email' => $user->email
+          ]);
+        } else {
+          print('credenciales erroneas');
+        }
+      } else {
+        print('Usuario no encontrado');
+      }
     }
 }

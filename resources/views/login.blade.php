@@ -5,10 +5,11 @@
     <body> 
         <div class="container">
             @yield('content')
-            <form method="POST" action="/register">
+            <form method="POST" action="/request-code">
               @csrf
               <label for="email">Email</label>
-              <input id="email" type="text" class="@error('email')
+              <input id="email" name="email" type="text" required
+              class="@error('email')
                 is-invalid
               @enderror">
 
@@ -17,7 +18,8 @@
               @enderror 
 
               <label for="password">Password</label>
-              <input id="password" type="password" class="@error('password')
+              <input id="password" name="password" type="password" required
+               class="@error('password')
                 is-invalid
               @enderror">
 
