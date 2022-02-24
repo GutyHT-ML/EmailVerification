@@ -21,12 +21,11 @@ class AuthController extends Controller
         'email' => $request->input('email'),
         'password' => Hash::make($request->input('password'))
       ]);
-      if ($user) {
-        $user->save();
+      if ($user->save()) {
         Mail::to($user)->send(new EmailVerification($user));
-        print('Usuario creado satisfactoriamente');
+        print('Registrado correctamente, verifique su correo antes de iniciar sesión');
       } else {
-        print('Debe verificar su email antes de iniciar sesión');
+        print('Error al registrarse');
       }
     }
 
