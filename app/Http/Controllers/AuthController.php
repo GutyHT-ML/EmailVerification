@@ -21,8 +21,13 @@ class AuthController extends Controller
         'email' => $request->input('email'),
         'password' => Hash::make($request->input('password'))
       ]);
-      Mail::to($user)->send(new EmailVerification($user));
-      print('Debe verificar su email antes de iniciar sesión');
+      if ($user) {
+        $user->save();
+        Mail::to($user)->send(new EmailVerification($user));
+        print('Usuario creado satisfactoriamente');
+      } else {
+        print('Debe verificar su email antes de iniciar sesión');
+      }
     }
 
     public function verifyEmail(Request $request) {
@@ -65,7 +70,7 @@ class AuthController extends Controller
           $str = chr(rand(65,90)) . chr(rand(65,90)) . chr(rand(65,90)) . chr(rand(65,90)) . chr(rand(65,90));
           $user->verification_code = Hash::make($str);
           $user->save();
-          Mail::to($user)->send(new CodeVerification($user));
+          Mail::to($user)->send(new CodeVerification($user->name, $str));
           return view('codeverification', [
             'email' => $user->email
           ]);

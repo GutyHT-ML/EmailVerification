@@ -5,9 +5,9 @@
             <div class="row">
               @yield('row')
               <h1>Código de autenticación</h1>
-              <h2>{{$user->name}}</h2>
+              <h2>{{$name}}</h2>
               <label>
-                {{$user->verification_code}}
+                {{$code}}
               </label>
               </form>
             </div>
